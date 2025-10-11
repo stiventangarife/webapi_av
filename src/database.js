@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const uri = "mongodb+srv://tangarifedev_db_user:jVqxfu4DJxSMPyc3@axie-adventures-test.rbrmaj9.mongodb.net/?retryWrites=true&w=majority&appName=axie-adventures-test";
+dotenv.config();
+
+const uri = process.env.MONGO_URI;
 
 export async function connect()
 {

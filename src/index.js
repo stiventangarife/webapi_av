@@ -6,7 +6,11 @@ import schema from "./schema.js";
 
 import { connect } from "./database.js";
 
-const SECRET = "supersecretkey";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const SECRET = process.env.SECRET;
 
 const app = express();
 connect();
