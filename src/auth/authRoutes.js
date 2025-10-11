@@ -1,10 +1,11 @@
+// src/auth/authRoutes.js
 import express from "express";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { getLoginUrl, exchangeCodeForTokens } from "./skyMavisAuth.js";
 
 const router = express.Router();
-const sessions = new Map(); // para hacer polling desde Unity (temporal)
+const sessions = new Map();
 const SECRET = process.env.SECRET;
 
 // 1️⃣ - Redirige al login de Sky Mavis
@@ -25,11 +26,10 @@ router.get("/callback", async (req, res) => {
   try {
     const tokens = await exchangeCodeForTokens(code);
 
-    // Generamos tu propio JWT interno
     const userToken = jwt.sign(
       {
-        sub: tokens.id_token, // o info decodificada del id_token
-        skyMavisAccessToken: tokens.access_token,
+        sub: tokens.id_token,
+        accessToken: tokens.access_token,
       },
       SECRET,
       { expiresIn: "2h" }
@@ -37,14 +37,14 @@ router.get("/callback", async (req, res) => {
 
     sessions.set(state, { ready: true, token: userToken });
 
-    res.send(`<h3>Login complete, you can close this window</h3>`);
+    res.send("<h3>✅ Login complete, you can close this window.</h3>");
   } catch (err) {
-    console.error(err);
+    console.error("Auth failed:", err);
     res.status(500).send("Auth failed");
   }
 });
 
-// 3️⃣ - Polling desde Unity (consulta si ya hay token)
+// 3️⃣ - Polling desde Unity
 router.get("/session", (req, res) => {
   const { state } = req.query;
   const session = sessions.get(state);

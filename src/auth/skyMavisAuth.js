@@ -4,40 +4,46 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const {
-  CLIENT_ID,
-  CLIENT_SECRET,
-  REDIRECT_URI,
-  SKYMAVIS_AUTH_URL,
-  SKYMAVIS_TOKEN_URL,
-  X_API_KEY,
+  SKY_MAVIS_CLIENT_ID,
+  SKY_MAVIS_CORRELATION_KEY,
+  SKY_MAVIS_REDIRECT_URI,
+  SKY_MAVIS_AUTH_URL,
+  SKY_MAVIS_TOKEN_URL
 } = process.env;
 
 // Redirige al login de Sky Mavis
 export function getLoginUrl(state) {
-  const authUrl = `${SKYMAVIS_AUTH_URL}?client_id=${encodeURIComponent(CLIENT_ID)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=openid%20profile&state=${encodeURIComponent(state)}`;
+  const authUrl = `${SKY_MAVIS_AUTH_URL}?client_id=${encodeURIComponent(
+    SKY_MAVIS_CLIENT_ID
+  )}&redirect_uri=${encodeURIComponent(
+    SKY_MAVIS_REDIRECT_URI
+  )}&response_type=code&scope=openid%20profile&state=${encodeURIComponent(
+    state
+  )}`;
   return authUrl;
 }
 
 // Intercambia code por tokens
 export async function exchangeCodeForTokens(code) {
-  const form = new URLSearchParams();
-  form.append("grant_type", "authorization_code");
-  form.append("code", code);
-  form.append("redirect_uri", REDIRECT_URI);
-  form.append("client_id", CLIENT_ID);
-  form.append("client_secret", CLIENT_SECRET);
+  const body = {
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: SKY_MAVIS_REDIRECT_URI,
+    client_id: SKY_MAVIS_CLIENT_ID,
+  };
 
-  const resp = await fetch(SKYMAVIS_TOKEN_URL, {
+  const resp = await fetch(SKY_MAVIS_TOKEN_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-API-Key": X_API_KEY || "",
+      "Content-Type": "application/json",
+      "x-correlation-key": SKY_MAVIS_CORRELATION_KEY,
     },
-    body: form.toString(),
+    body: JSON.stringify(body),
   });
 
   if (!resp.ok) {
-    throw new Error(`Token request failed: ${resp.statusText}`);
+    const errText = await resp.text();
+    throw new Error(`Token request failed: ${resp.statusText} → ${errText}`);
   }
 
   const data = await resp.json();
