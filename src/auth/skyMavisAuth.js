@@ -18,7 +18,7 @@ export function getLoginUrl(state) {
   )}&redirect_uri=${encodeURIComponent(
     SKY_MAVIS_REDIRECT_URI
   )}&response_type=code&scope=openid%20profile&state=${encodeURIComponent(
-    state
+    state)}&apikey=${encodeURIComponent(process.env.SKY_MAVIS_CORRELATION_KEY
   )}`;
   return authUrl;
 }
@@ -35,8 +35,8 @@ export async function exchangeCodeForTokens(code) {
   const resp = await fetch(SKY_MAVIS_TOKEN_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "x-correlation-key": SKY_MAVIS_CORRELATION_KEY,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-API-Key": SKY_MAVIS_CORRELATION_KEY,
     },
     body: JSON.stringify(body),
   });
