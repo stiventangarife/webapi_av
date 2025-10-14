@@ -5,7 +5,7 @@ export default function Login() {
   const handleLogin = async () => {
     // Inicia el flujo de autenticación con Waypoint
     await authorize({
-      mode: "popup",
+      mode: "redirect",
       clientId: "dcc7811a-d50e-4c82-87dd-c016318bd38f", // tu clientId real
       redirectUrl: "https://webapi-av.onrender.com/auth/callback", // o tu dominio real en producción
       scopes: ["openid", "wallet"],

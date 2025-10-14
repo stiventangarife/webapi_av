@@ -27,19 +27,23 @@ router.get("/login", (req, res) => {
   res.redirect(url);
 });
 
-// 3️⃣ Recibe la respuesta de Ronin después del login
 router.get("/callback", async (req, res) => {
   try {
-    const result = parseRedirectUrl();
+    console.log("🔹 Query params:", req.query);
+    console.log("🔹 Full URL:", `${req.protocol}://${req.get("host")}${req.originalUrl}`);
 
-    // result contiene:
-    // { token, address, secondaryAddress, state }
+    const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
-    // Aquí podrías guardar el usuario o verificarlo
-    return res.json(result);
+    // ⚠️ No usar parseRedirectUrl() todavía
+    // Vamos a inspeccionar primero qué trae el callback
+    res.json({
+      message: "Datos recibidos desde Sky Mavis",
+      query: req.query,
+      fullUrl,
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error parsing Waypoint response" });
+    console.error("❌ Error en /auth/callback:", err);
+    res.status(500).json({ error: "Error procesando Waypoint callback" });
   }
 });
 
