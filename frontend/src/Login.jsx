@@ -7,7 +7,7 @@ export default function Login() {
     await authorize({
       mode: "popup",
       clientId: "dcc7811a-d50e-4c82-87dd-c016318bd38f", // tu clientId real
-      redirectUrl: "https://webapi-av.onrender.com/", // o tu dominio real en producción
+      redirectUrl: "https://webapi-av.onrender.com/auth/callback", // o tu dominio real en producción
       scopes: ["openid", "wallet"],
     });
   };
