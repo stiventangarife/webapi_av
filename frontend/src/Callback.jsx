@@ -7,7 +7,7 @@ export default function Callback() {
     console.log("Resultado de Waypoint:", result);
 
     // Enviar el token al backend para validarlo o crear sesión
-    fetch("http://localhost:4000/auth/verify", {
+    fetch("https://webapi-av.onrender.com/auth/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(result),
