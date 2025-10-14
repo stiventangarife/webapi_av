@@ -11,6 +11,7 @@ import { connect } from "./database.js";
 import dotenv from "dotenv";
 
 import waypointAuth from "./auth/waypointAuth.js";
+import callback from "./auth/callback.js";
 
 dotenv.config();
 
@@ -58,6 +59,8 @@ app.use('/graphql', graphqlHTTP((req) => ({
 })));
 
 app.use("/auth", waypointAuth);
+
+app.use("/auth", callback);
 
 app.use(express.static(path.join(__dirname, "src/public")));
 

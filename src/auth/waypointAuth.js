@@ -26,20 +26,46 @@ router.get("/login", (req, res) => {
   res.redirect(url);
 });
 
+// 🔹 2. Callback de autenticación
 /*router.get("/callback", async (req, res) => {
   try {
-    console.log("🔹 Query params:", req.query);
-    console.log("🔹 Full URL:", `${req.protocol}://${req.get("host")}${req.originalUrl}`);
+    const { type, data, address } = req.query;
 
-    const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+    if (type !== "success" || !data) {
+      return res.status(400).json({ error: "Fallo en la autenticación" });
+    }
 
-    // No usar parseRedirectUrl() todavía
-    // Vamos a inspeccionar primero qué trae el callback
-    res.json({
-      message: "Datos recibidos desde Sky Mavis",
-      query: req.query,
-      fullUrl,
+    // Decodificamos el token que nos da Sky Mavis
+    const decoded = jwt.decode(data, { complete: true });
+
+    if (decoded?.payload?.iss !== "https://id.skymavis.com") {
+      return res.status(400).json({ error: "Token inválido (issuer incorrecto)" });
+    }
+
+    // Usuario autenticado
+    const user = {
+      id: decoded.payload.sub,
+      address,
+      roles: decoded.payload.roles || [],
+    };
+
+    // Aquí podrías:
+    // - Buscar si el usuario ya existe en tu DB (por dirección)
+    // - Crear uno nuevo si no existe
+    // - Luego generar tu JWT interno
+
+    const internalToken = jwt.sign(user, SECRET, { expiresIn: "2h" });
+
+    // 🚀 OPCIÓN 1: Responder con JSON (útil si Unity hace la llamada directa)
+    return res.json({
+      message: "Inicio de sesión exitoso",
+      user,
+      internalToken,
     });
+
+    // 🚀 OPCIÓN 2: Redirigir a tu frontend
+    // res.redirect(`https://tu-frontend.com/?token=${internalToken}`);
+
   } catch (err) {
     console.error("Error en /auth/callback:", err);
     res.status(500).json({ error: "Error procesando Waypoint callback" });
