@@ -29,17 +29,24 @@ router.get("/login", (req, res) => {
 // 🔹 2. Callback de autenticación
 router.get("/callback", async (req, res) => {
   try {
+    console.error("Query ", req.query);
     const { type, data, address } = req.query;
 
     if (type !== "success" || !data) {
+      console.warn("❌ Autenticación fallida o incompleta:", req.query);
       return res.status(400).json({ error: "Fallo en la autenticación" });
     }
 
     // Decodificamos el token que nos da Sky Mavis
     const decoded = jwt.decode(data, { complete: true });
+    console.log("🔍 Token decodificado:", decoded);
+
+    if (!decoded) {
+      throw new Error("No se pudo decodificar el token JWT recibido");
+    }
 
     if (decoded?.payload?.iss !== "https://id.skymavis.com") {
-      return res.status(400).json({ error: "Token inválido (issuer incorrecto)" });
+      throw new Error(`Issuer inválido: ${decoded?.payload?.iss}`);
     }
 
     // Usuario autenticado
@@ -49,6 +56,7 @@ router.get("/callback", async (req, res) => {
       roles: decoded.payload.roles || [],
     };
 
+    console.log("✅ Usuario autenticado:", user);
     // Aquí podrías:
     // - Buscar si el usuario ya existe en tu DB (por dirección)
     // - Crear uno nuevo si no existe
