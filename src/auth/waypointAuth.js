@@ -1,4 +1,5 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import { WaypointProvider } from "@sky-mavis/waypoint";
 
 const router = express.Router();
