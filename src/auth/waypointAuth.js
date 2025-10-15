@@ -63,13 +63,10 @@ router.get("/callback", async (req, res) => {
     // - Crear uno nuevo si no existe
     // - Luego generar tu JWT interno
 
-    const internalToken = jwt.sign(user, SECRET, { expiresIn: "2h" });
-
     // 🚀 OPCIÓN 1: Responder con JSON (útil si Unity hace la llamada directa)
     return res.json({
       message: "Inicio de sesión exitoso",
       user,
-      internalToken,
     });
 
     // 🚀 OPCIÓN 2: Redirigir a tu frontend
