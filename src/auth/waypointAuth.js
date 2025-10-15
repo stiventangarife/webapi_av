@@ -64,10 +64,13 @@ router.get("/callback", async (req, res) => {
     // - Luego generar tu JWT interno
 
     // 🚀 OPCIÓN 1: Responder con JSON (útil si Unity hace la llamada directa)
-    return res.json({
-      message: "Inicio de sesión exitoso",
-      user,
-    });
+    //return res.json({
+      //message: "Inicio de sesión exitoso",
+      //user,
+    //});
+
+    const unityRedirect = `unityapp://login-success?address=${address}`;
+    res.redirect(unityRedirect);
 
     // 🚀 OPCIÓN 2: Redirigir a tu frontend
     // res.redirect(`https://tu-frontend.com/?token=${internalToken}`);
