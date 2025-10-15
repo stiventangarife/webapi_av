@@ -27,7 +27,7 @@ router.get("/login", (req, res) => {
 });
 
 // 🔹 2. Callback de autenticación
-/*router.get("/callback", async (req, res) => {
+router.get("/callback", async (req, res) => {
   try {
     const { type, data, address } = req.query;
 
@@ -70,6 +70,6 @@ router.get("/login", (req, res) => {
     console.error("Error en /auth/callback:", err);
     res.status(500).json({ error: "Error procesando Waypoint callback" });
   }
-});*/
+});
 
 export default router;
