@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import fetch from "node-fetch";
 
 const router = express.Router();
@@ -20,4 +20,4 @@ router.post("/verify", async (req, res) => {
   }
 });
 
-export default router;
+export default router;*/
