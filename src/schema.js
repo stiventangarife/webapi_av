@@ -32,6 +32,13 @@ const typeDefs = `
         idUser: ID
     }
 
+    type AxiesEquippedUser{
+        _id: ID
+        slot: Int
+        idAxie: ID
+        idUser: ID
+    }
+
     type Mutation {
         createUser(input: CreateUserInput): AuthPayload
         loginUser(input: LoginUserInput): AuthPayload
@@ -39,6 +46,8 @@ const typeDefs = `
         createAxieUser(input: CreateAxieUserInput): AxieUser
         updateAxieUser(_id: ID, input: UpdateAxieUserInput): AxieUser
         deleteAxieUser(_id: ID): AxieUser
+
+        createAxiesEquippedUser(input: CreateAxiesEquippedUserInput): AxiesEquippedUser
     }
 
     input CreateUserInput {
@@ -73,6 +82,12 @@ const typeDefs = `
         currentEnergy: Int
         initiative: Int
         attack: Int
+        idUser: ID
+    }
+
+    input CreateAxiesEquippedUserInput {
+        slot: Int
+        idAxie: ID
         idUser: ID
     }
 `;

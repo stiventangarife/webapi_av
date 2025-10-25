@@ -12,6 +12,7 @@ export async function connect()
         await mongoose.connect(uri, {
             useNewUrlParser: true
         })
+        
         console.log('>>> DB is connect');
     }
     catch(error)

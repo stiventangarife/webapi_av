@@ -12,6 +12,8 @@ import dotenv from "dotenv";
 
 import waypointAuth from "./auth/waypointAuth.js";
 
+import nftmoralis from "./api/nftmoralis.js";
+
 dotenv.config();
 
 const SECRET = process.env.SECRET;
@@ -56,6 +58,8 @@ app.use('/graphql', graphqlHTTP((req) => ({
         userToken: req.user
     }
 })));
+
+app.use("/api", nftmoralis);
 
 app.use("/auth", waypointAuth);
 

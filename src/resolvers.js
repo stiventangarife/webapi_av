@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 import User from "./models/User.js";
 import AxiesUser from "./models/AxiesUser.js";
+import AxiesEquippedUser from "./models/AxiesEquippedUser.js";
 
 const SECRET = "supersecretkey";
 
@@ -24,6 +25,7 @@ export const resolvers = {
         }
     },
     Mutation: {
+        //USERS
         createUser: async (_, { input }) => {
             const existingUser = await User.findOne( { wallet: input.wallet });
             if(existingUser)
@@ -57,11 +59,13 @@ export const resolvers = {
 
             return { token, user };
         },
+
+        //AXIES
         createAxieUser: async (_, { input }, { userToken }) => {
-            /*if(!userToken)
+            if(!userToken)
             {
                 throw new Error("Unauthorized");
-            }*/
+            }
 
             const newAxieUser = new AxiesUser(input);
             await newAxieUser.save();
@@ -76,12 +80,24 @@ export const resolvers = {
             return await AxiesUser.findByIdAndDelete(_id);
         },*/
         updateAxieUser: async (_, { _id, input }, { userToken }) => {
+            if(!userToken)
+            {
+                throw new Error("Unauthorized");
+            }
+
+            return await AxiesUser.findByIdAndUpdate(_id, input, { new: true });
+        },
+
+        //AXIES EQUIPO
+        createAxiesEquippedUser: async (_, { _id, input }, { userToken }) => {
             /*if(!userToken)
             {
                 throw new Error("Unauthorized");
             }*/
 
-            return await AxiesUser.findByIdAndUpdate(_id, input, { new: true });
+            const newAxieEquippedUser = new AxiesEquippedUser(input);
+            await newAxieEquippedUser.save();
+            return newAxieEquippedUser;
         }
     }
 };

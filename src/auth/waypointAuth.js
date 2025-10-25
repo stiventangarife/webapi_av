@@ -63,7 +63,7 @@ router.get("/callback", async (req, res) => {
     });
 
     //Redirigir a Unity
-    //const unityRedirect = `unityapp://login-success?address=${address}`;
+    //const unityRedirect = `unityapp://login-success?address=${address}&id-sky=${id}`;
     //res.redirect(unityRedirect);
   } catch (err) {
     console.error("Error en /auth/callback:", err);
